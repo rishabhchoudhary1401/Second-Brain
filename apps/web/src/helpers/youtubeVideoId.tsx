@@ -1,4 +1,4 @@
-export function youtubeVideoId(link){
+export function youtubeVideoId(link:string){
     try{
         const url = new URL(link);
         if(url.hostname==="youtu.be"){

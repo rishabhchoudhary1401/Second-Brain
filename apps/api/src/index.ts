@@ -3,6 +3,8 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 dotenv.config();
 
+
+
 async function main(){
     console.log("Connecting to db...");
     if(!process.env.DB_URL){

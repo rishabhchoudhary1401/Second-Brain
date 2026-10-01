@@ -1,23 +1,18 @@
-import { SideBar } from "./components/ui/SideBar.tsx";
-import { Header } from "./components/ui/HomeContent.tsx";
+import {BrowserRouter , Routes , Route } from "react-router-dom";
+import { SignUp , SignIn , DashBoard} from "./pagegs/Index";
 
 function App() {
-  
-  return <>
-    
-    <div className="flex h-screen">
-      <SideBar />
-      
-      <div className="flex-1 flex flex-col">
-        <Header />
 
-        <main className="flex-1 p-6">
-          
-        </main>
-      </div>
-    </div>
-   
-  </>
+  return <BrowserRouter>
+    <Routes>
+      <Route path="/signup" element={<SignUp/>} />
+      <Route path="/signin" element={<SignIn/>} />
+      <Route path="/dashboard" element={<DashBoard/>} />
+    </Routes>
+  </BrowserRouter>
+    
+    
+
 }
 
 export default App;

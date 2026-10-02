@@ -13,7 +13,7 @@ const contentsDB = new Schema({
     link: String,
     type: String,
     title: String,
-    tags: [{type: ObjId, ref: "TagDB"}],
+    tags: [{type: ObjId, ref: "TagsDB"}],
     userId: {type: ObjId, ref: "UserDB", required:true}
 });
 

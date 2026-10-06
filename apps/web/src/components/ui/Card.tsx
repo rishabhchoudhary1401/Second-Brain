@@ -21,7 +21,7 @@ export function Card(props: CardInputs) {
   else if (props.type === "twitter") Icon = TwitterIcon;
 
   return (
-    <div className="bg-white rounded-md shadow-md border border-gray-200 p-4 m-2 max-w-72 max-h-64 overflow-y-auto overflow-x-hidden rounded-lg ">
+    <div className="bg-white rounded-md shadow-md border border-gray-200 p-4 m-2 max-w-72 max-h-72 overflow-y-auto overflow-x-hidden rounded-lg ">
       <div className="flex justify-between">
         <div className="flex items-center">
           <div className="pr-2 text-gray-500">
@@ -32,9 +32,9 @@ export function Card(props: CardInputs) {
 
         <div className="flex items-center text-gray-500">
           <div className="pr-2">
-            <ShareIcon link={props.link} />
+            <ShareIcon />
           </div>
-          <DeleteIcon link={props.link} />
+          <DeleteIcon />
         </div>
       </div>
 
@@ -42,7 +42,7 @@ export function Card(props: CardInputs) {
         <CardContent type={props.type} link={props.link} />
       </div>
 
-      <div className="flex flex-wrap gap-2 mt-3">
+      <div className="flex items-center flex-wrap gap-2 mt-3">
         {props.tags.map((tag, index) => (
           <span
             key={index}

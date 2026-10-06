@@ -150,4 +150,25 @@ userRouter.get("/get_shared_brain", async (req , res) => {
     return res.status(200).json(brain);
 });
 
+userRouter.get("/contents", auth, async (req, res) => {
+    if (!req.userId) {
+        return res.status(401).json({ message: "Unauthorized" });
+    }
+    try {
+        const contents = await ContentDB.find({
+            userId: req.userId
+        }).populate("tags");
+        console.log(contents);
+
+        res.json({
+            contents
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            message: "Failed to fetch contents"
+        });
+    }
+});
+
 export default userRouter;

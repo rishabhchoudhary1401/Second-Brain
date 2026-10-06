@@ -1,6 +1,11 @@
 import {BrowserRouter , Routes , Route } from "react-router-dom";
-import { SignUp , SignIn , DashBoard} from "./pagegs/Index";
-import { AuthenticatedRoots } from "./routes/authroutes";
+import { SignUp , SignIn , Home} from "./pagegs/Index";
+import { AuthenticatedRoots } from "./routes/authRoutes";
+import { Articles } from "./pagegs/Articles";
+import { Youtube_Links } from "./pagegs/Youtube";
+import { Tweets } from "./pagegs/Tweets";
+import { Documents } from "./pagegs/Documents";
+import { MyProfile } from "./pagegs/MyProfile";
 
 function App() {
 
@@ -9,7 +14,13 @@ function App() {
       <Route path="/signup" element={<SignUp/>} />
       <Route path="/signin" element={<SignIn/>} />
       <Route element={<AuthenticatedRoots/>}>
-        <Route path="/dashboard" element={<DashBoard/>} />
+        <Route path="/" element={<Home/>} />
+        <Route path="/home" element={<Home/>} />
+        <Route path="/articles" element={<Articles/>} />
+        <Route path="/youtube" element={<Youtube_Links/>} />
+        <Route path="/tweets" element={<Tweets/>} />
+        <Route path="/documents" element={<Documents/>} />
+        <Route path="/myProfile" element={<MyProfile />} />
       </Route>
     </Routes>
   </BrowserRouter>

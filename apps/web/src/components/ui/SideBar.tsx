@@ -17,7 +17,7 @@ export function SideBar(){
     {/* desktop version */}
 
     <div className="transition-all duration-1000 bg-white h-screen sm:translate-x-0 w-0 sm:w-72 border-r flex flex-col">
-        <div className="flex items-center ">
+        <div onClick={()=> navigate("/home")} className="flex items-center cursor-pointer">
             <img className=" h-15 w-15 m-3 " src= {logo} />
             <h1 className="text-blue-700 text-3xl font-extralight">Second Brain</h1>
         </div>

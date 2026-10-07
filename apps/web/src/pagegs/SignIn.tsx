@@ -46,7 +46,7 @@ async function submitButtonHandler( data: SigninFormType, setMessage: React.Disp
     const result = await singinSubmitHelper(data);
     setMessage(result.message);
     if(result.status){
-        navigate("/dashboard");
+        navigate("/home");
     }
     
   } finally {

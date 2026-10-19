@@ -103,19 +103,8 @@ userRouter.delete("/delete_brain/:brainId", auth, async (req, res) =>{
     else return res.status(409).json({message:"brain not found to delete..."});
 });
 
-//get existing brain
-userRouter.get("/get/brain/:brainId", auth, async (req , res) => {
-    if (!req.userId) {
-        return res.status(401).json({ message: "Unauthorized" });
-    }
-    const brain = await ContentDB.findOne({
-        userId: req.userId,
-        _id: req.params.brainId
-    }).populate("tags");
-    if(brain) return res.status(200).json(brain);
-    else return res.status(404).json({message:"Invalid link..."});
-});
 
+//start sharing a brain
 userRouter.post("/start_sharing_brain", auth, async (req , res ) => {
     const uniqueHash = crypto.randomUUID();
     if (!req.userId) {
@@ -123,12 +112,12 @@ userRouter.post("/start_sharing_brain", auth, async (req , res ) => {
     }
 
     const isAlreadyShared = await LinkDB.findOne({userId: req.userId});
-    if(isAlreadyShared) return res.status(200).json({link : `http://localhost:${process.env.PORT}/api/v1/user/get_shared_brain?hash=${isAlreadyShared.hash}`});
+    if(isAlreadyShared) return res.status(200).json({link : `http://localhost:${5173}/SharedBrain?hash=${isAlreadyShared.hash}`});
 
     const linkInDB = await LinkDB.create({hash: uniqueHash, userId: req.userId});
     if(!linkInDB) return res.status(400).json({message:"Unknown error occured..."});
     else{
-        const link = `http://localhost:${process.env.PORT}/api/v1/user/get_shared_brain?hash=${linkInDB.hash}`;
+        const link = `http://localhost:${5173}/SharedBrain?hash=${linkInDB.hash}`;
         return res.status(200).json({link: link});
     }
 })
@@ -170,5 +159,19 @@ userRouter.get("/contents", auth, async (req, res) => {
         });
     }
 });
+
+// //get existing brain
+// userRouter.get("/get/brain/:brainId", auth, async (req , res) => {
+//     if (!req.userId) {
+//         return res.status(401).json({ message: "Unauthorized" });
+//     }
+//     const brain = await ContentDB.findOne({
+//         userId: req.userId,
+//         _id: req.params.brainId
+//     }).populate("tags");
+//     if(brain) return res.status(200).json(brain);
+//     else return res.status(404).json({message:"Invalid link..."});
+// });
+
 
 export default userRouter;

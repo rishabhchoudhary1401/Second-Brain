@@ -6,6 +6,7 @@ import { Youtube_Links } from "./pagegs/Youtube";
 import { Tweets } from "./pagegs/Tweets";
 import { Documents } from "./pagegs/Documents";
 import { MyProfile } from "./pagegs/MyProfile";
+import { SharedBrain } from "./pagegs/sharedBrain";
 
 function App() {
 
@@ -13,6 +14,7 @@ function App() {
     <Routes>
       <Route path="/signup" element={<SignUp/>} />
       <Route path="/signin" element={<SignIn/>} />
+      <Route path="/sharedBrain" element={<SharedBrain/>} />
       <Route element={<AuthenticatedRoots/>}>
         <Route path="/" element={<Home/>} />
         <Route path="/home" element={<Home/>} />

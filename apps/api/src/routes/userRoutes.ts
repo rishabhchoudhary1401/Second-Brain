@@ -1,11 +1,12 @@
-import { Router } from "express" ;
+import { Router, type Router as ExpressRouter } from "express" ;
 import { ContentDB, TagsDB, UserDB, LinkDB } from "../db.js";
 import { auth } from "../middlewares/auth.js";
 import { Types } from "mongoose";
 import { contentBodyType } from "../../../../packages/types/contentSchemas.js";
 import { get_shared_brain_query } from "../../../../packages/types/get_shared_brain_query.js";
+import { WEB_ORIGIN } from "../config/env.js";
 
-const userRouter = Router();
+const userRouter: ExpressRouter = Router();
 
 //get user profile info...
 userRouter.get("/me", auth, async (req, res) => {
@@ -87,7 +88,7 @@ userRouter.put("/edit_content/:contentId", auth, async (req , res) => {
     }
     
     const replacedContent = await ContentDB.updateOne({ _id : contentId, userId: req.userId }, { $set: contentToReplace });
-    if(!replacedContent) return res.status(500).json({message: "Unknown error..."});
+    if(replacedContent.matchedCount === 0) return res.status(404).json({message: "Content not found..."});
     return res.status(200).json({message: "Succesfully updated...", updatedContent: replacedContent});
 
 });
@@ -106,35 +107,39 @@ userRouter.delete("/delete_brain/:brainId", auth, async (req, res) =>{
 
 //start sharing a brain
 userRouter.post("/start_sharing_brain", auth, async (req , res ) => {
-    const uniqueHash = crypto.randomUUID();
     if (!req.userId) {
         return res.status(401).json({ message: "Unauthorized" });
     }
 
     const isAlreadyShared = await LinkDB.findOne({userId: req.userId});
-    if(isAlreadyShared) return res.status(200).json({link : `http://localhost:${5173}/SharedBrain?hash=${isAlreadyShared.hash}`});
+    if(isAlreadyShared) {
+        const link = new URL("/sharedBrain", WEB_ORIGIN);
+        link.searchParams.set("hash", isAlreadyShared.hash);
+        return res.status(200).json({link: link.toString()});
+    }
 
+    const uniqueHash = crypto.randomUUID();
     const linkInDB = await LinkDB.create({hash: uniqueHash, userId: req.userId});
     if(!linkInDB) return res.status(400).json({message:"Unknown error occured..."});
     else{
-        const link = `http://localhost:${5173}/SharedBrain?hash=${linkInDB.hash}`;
-        return res.status(200).json({link: link});
+        const link = new URL("/sharedBrain", WEB_ORIGIN);
+        link.searchParams.set("hash", linkInDB.hash);
+        return res.status(200).json({link: link.toString()});
     }
 })
 
 
 //get a shared brain
 userRouter.get("/get_shared_brain", async (req , res) => {
-    //if(!req.query.hash) return res.status(409).json({message: "Invalid link..."});
     const query = get_shared_brain_query.safeParse(req.query.hash);
-    if(!query.success)return res.status(409).json({message: "Invalid Url..."});
+    if(!query.success)return res.status(400).json({message: "Invalid share link..."});
     const brainHash = query.data;
     const link = await LinkDB.findOne({hash: brainHash});
-    if(!link) return res.status(500).json({message:"Unknown error..."});
+    if(!link) return res.status(404).json({message:"Shared brain not found..."});
     const userId = link.userId;
 
     const brain = await ContentDB.find({userId: userId}).populate("tags").populate("userId", "firstName lastName");
-    if(brain.length == 0) return res.status(200).json({message : "Brain has zero contents..."})
+    if(brain.length == 0) return res.status(200).json([]);
     
     return res.status(200).json(brain);
 });
@@ -147,8 +152,6 @@ userRouter.get("/contents", auth, async (req, res) => {
         const contents = await ContentDB.find({
             userId: req.userId
         }).populate("tags");
-        console.log(contents);
-
         res.json({
             contents
         });

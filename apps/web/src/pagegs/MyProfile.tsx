@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { fetchProfile } from "../helpers/fetchProfile";
+import Button from "../components/ui/Button";
 
 
 
@@ -100,6 +101,17 @@ export function MyProfile(){
                         </div>
                     </div>
 
+                </div>
+
+                <div className="mt-6 flex justify-end">
+                    <Button
+                        text="Logout"
+                        variant="secondary"
+                        onClick={() => {
+                            localStorage.removeItem("token");
+                            window.location.reload();
+                        }}
+                    />
                 </div>
             </div>
         </div>

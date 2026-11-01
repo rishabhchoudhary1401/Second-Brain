@@ -1,9 +1,9 @@
-import { Router } from "express";
+import { Router, type Router as ExpressRouter } from "express";
 import {UserDB} from "../db.js";
 import { loginFormSchema, signupFormSchema } from "../../../../packages/types/authSchemas.js";
 import { compareHashedPass, hashPass } from "../helpers/bcryptHelper.js";
 import { signJwt } from "../helpers/jwtHelper.js";
-const authRouter = Router();
+const authRouter: ExpressRouter = Router();
 
 
 
@@ -23,8 +23,8 @@ authRouter.post("/signup", async (req, res) =>{
         const token = signJwt({userId : newUser._id});
         return res.status(201).json({message: "signup succesfull...", token:token});
     } catch(err){
-        if(err instanceof Error) return res.status(500).json({message: err.message});
-        return res.status(500).json({message: "unknown error"});
+        console.error("Signup failed", err);
+        return res.status(500).json({message: "Signup failed. Please try again."});
     };    
 });
 

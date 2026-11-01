@@ -14,8 +14,6 @@ export async function signupSubmit( data: SignupFormType ){
     try{
         const response = await api.post("/auth/signup" , result.data);
 
-        console.log(response);
-
         localStorage.setItem("token", response.data.token);
 
         return {

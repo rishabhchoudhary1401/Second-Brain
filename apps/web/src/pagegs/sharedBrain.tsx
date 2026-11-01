@@ -21,17 +21,42 @@ interface Content {
 
 export function SharedBrain(){
     const [contents, setContent] = useState<Content[]>([]);
+    const [message, setMessage] = useState("");
+    const [loadedHash, setLoadedHash] = useState<string | null>();
     const [searchParams] = useSearchParams();
     const hash = searchParams.get("hash");
 
     useEffect(()=>{
+        let ignore = false;
         async function loadContents(){
             if (!hash) return;
-            const data = await fetchSharedContents(hash);
-            setContent(data);
+            try {
+                const data = await fetchSharedContents(hash);
+                const sharedContents = Array.isArray(data) ? data : [];
+                if (!ignore) {
+                    setContent(sharedContents);
+                    setMessage(sharedContents.length === 0 ? "This shared brain has no content yet." : "");
+                    setLoadedHash(hash);
+                }
+            } catch {
+                if (!ignore) {
+                    setContent([]);
+                    setMessage("This share link is invalid or unavailable.");
+                    setLoadedHash(hash);
+                }
+            }
         }
         loadContents();
+        return () => {
+            ignore = true;
+        };
       }, [hash]);
+
+    const displayMessage = !hash
+        ? "This share link is missing its hash."
+        : loadedHash !== hash
+            ? "Loading shared brain..."
+            : message;
 
     return (
         <div className="flex h-screen">
@@ -44,8 +69,9 @@ export function SharedBrain(){
                     
 
                     <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] md:grid-cols-2 lg:grid-cols-3 gap-4 justify-items-center">
-                        {contents.map((content) => ( <Card key={content._id} type={content.type} link={content.link} tags={content.tags.map(tag => tag.title)} title={content.title}  />))}
+                        {loadedHash === hash && contents.map((content) => ( <Card key={content._id} contentId={content._id} type={content.type} link={content.link} tags={content.tags.map(tag => tag.title)} title={content.title}  />))}
                     </div>
+                    {displayMessage && <div className="py-6 text-center text-gray-500">{displayMessage}</div>}
 
 
                 </main>

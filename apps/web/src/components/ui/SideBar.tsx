@@ -10,7 +10,6 @@ import { useNavigate } from "react-router-dom";
 
 
 export function SideBar(){
-    console.log("loading sidebar...");
     const navigate = useNavigate();
     return <>
 

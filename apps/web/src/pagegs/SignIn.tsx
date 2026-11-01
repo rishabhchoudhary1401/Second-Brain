@@ -23,7 +23,7 @@ export function SignIn(){
                 </div>
             )}
             <div className="mt-4 flex justify-center">
-                <Button text="SignIn" variant="primary" startIcon={<CheckIcon/>} size="md" onClick = {() =>{submitButtonHandler({email, password}, setMessage, setLoading, navigate)}}/>
+                <Button text={loading ? "Signing In..." : "SignIn"} variant="primary" startIcon={<CheckIcon/>} size="md" onClick = {() =>{submitButtonHandler({email, password}, setMessage, setLoading, navigate)}} disabled={loading}/>
             </div>
             <div className="mt-4 text-center text-sm">
                 <span className="text-gray-500">Don't have an account? </span>
@@ -39,10 +39,8 @@ export function SignIn(){
 async function submitButtonHandler( data: SigninFormType, setMessage: React.Dispatch<React.SetStateAction<string>> , setLoading: React.Dispatch<React.SetStateAction<boolean>>, navigate: ReturnType<typeof useNavigate> ){
   setLoading(true);
   setMessage("");
-  console.log("btn clicked");
 
   try {
-    console.log("inside try block");
     const result = await singinSubmitHelper(data);
     setMessage(result.message);
     if(result.status){

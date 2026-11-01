@@ -7,7 +7,6 @@ export function AuthenticatedRoots(){
         return <Navigate to="/signin" replace />;
 
     }
-    console.log("hello from authroutes...");
     return (
         <div className="flex h-screen">
             <SideBar />

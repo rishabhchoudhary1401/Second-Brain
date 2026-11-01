@@ -1,19 +1,16 @@
 import app from "./app.js";
-import mongoose from "mongoose";
-import dotenv from "dotenv";
-dotenv.config();
-
-
+import { connectDB } from "./db.js";
 
 async function main(){
     console.log("Connecting to db...");
-    if(!process.env.DB_URL){
-        console.log("db url not present");
-        return;
-    }
-    await mongoose.connect(process.env.DB_URL);
+    await connectDB();
     console.log("Connected to db...");
-    app.listen(process.env.PORT);
-    console.log(`Listening to port ${process.env.PORT}`);
+    const port = Number(process.env.PORT) || 3000;
+    app.listen(port, "0.0.0.0", () => {
+        console.log(`Listening to port ${port}`);
+    });
 }
-main();
+main().catch((error) => {
+    console.error("API failed to start", error);
+    process.exitCode = 1;
+});

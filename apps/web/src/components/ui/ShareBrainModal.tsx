@@ -11,6 +11,7 @@ export function ShareBrainModal({
 }) {
     const [link, setLink] = useState("");
     const [loading, setLoading] = useState(false);
+    const [message, setMessage] = useState("");
 
     async function generateLink() {
         try {
@@ -18,11 +19,10 @@ export function ShareBrainModal({
 
             const token = localStorage.getItem("token");
             if (!token) {
-                return {
-                    success: false,
-                    message: "Please login again"
-                };
+                setMessage("Please login again");
+                return;
             }
+            setMessage("");
             const response = await api.post(
                 "/user/start_sharing_brain",
                 {},
@@ -34,8 +34,8 @@ export function ShareBrainModal({
             );
 
             setLink(response.data.link);
-        } catch (error) {
-            console.log(error);
+        } catch {
+            setMessage("Could not generate a share link. Please try again.");
         } finally {
             setLoading(false);
         }
@@ -68,6 +68,7 @@ export function ShareBrainModal({
                         text={loading ? "Generating..." : "Generate Link"}
                         variant="primary"
                         onClick={generateLink}
+                        disabled={loading}
                     />
                 ) : (
                     <div className="flex gap-2">
@@ -83,6 +84,11 @@ export function ShareBrainModal({
                         >
                             Copy
                         </button>
+                    </div>
+                )}
+                {message && (
+                    <div className="mt-3 text-sm text-red-500">
+                        {message}
                     </div>
                 )}
             </div>

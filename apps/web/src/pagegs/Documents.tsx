@@ -28,6 +28,6 @@ export function Documents(){
 
 
     return <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] md:grid-cols-2 lg:grid-cols-3 gap-4 justify-items-center">
-            {contents.filter((content)=>content.type === "document").map((content) => ( <Card key={content._id} type={content.type} link={content.link} tags={content.tags.map(tag => tag.title)} title={content.title}  />))}
+            {contents.filter((content)=>content.type === "document").map((content) => ( <Card key={content._id} contentId={content._id} editable type={content.type} link={content.link} tags={content.tags.map(tag => tag.title)} title={content.title}  />))}
           </div>
 }

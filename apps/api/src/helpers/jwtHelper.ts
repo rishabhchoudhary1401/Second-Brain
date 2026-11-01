@@ -3,7 +3,7 @@ import type { JwtPayload } from "jsonwebtoken";
 import { JWT_KEY } from "../config/env.js";
 
 export function signJwt(ObjToBeSigned: object){
-    const token = jwt.sign(ObjToBeSigned, JWT_KEY);
+    const token = jwt.sign(ObjToBeSigned, JWT_KEY, { expiresIn: "7d" });
     return token;
 }
 export function verifyJwt(token: string){

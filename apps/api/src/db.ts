@@ -1,7 +1,22 @@
 import mongoose from "mongoose";
-import type { required } from "zod/mini";
 const Schema = mongoose.Schema;
 const ObjId = Schema.ObjectId;
+
+let connectionPromise: Promise<typeof mongoose> | null = null;
+
+export function connectDB() {
+    if (mongoose.connection.readyState === 1) return Promise.resolve(mongoose);
+    if (!process.env.DB_URL) return Promise.reject(new Error("DB_URL missing"));
+
+    if (!connectionPromise) {
+        connectionPromise = mongoose.connect(process.env.DB_URL).catch((error) => {
+            connectionPromise = null;
+            throw error;
+        });
+    }
+
+    return connectionPromise;
+}
 
 const userDB = new Schema({
     email: {type: String, unique: true},

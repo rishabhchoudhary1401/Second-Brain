@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
 export async function hashPass(pass:string){
-    const hashedPassword = await bcrypt.hash(pass, 5);
+    const hashedPassword = await bcrypt.hash(pass, 12);
     return hashedPassword;
 }
 

@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react"
-import { Card } from "../components/ui/index"
+import { useEffect, useState } from "react";
+import { Card } from "../components/ui/index";
 import { fetchContents } from "../helpers/fetchContents";
 
 interface Content {
@@ -14,20 +14,30 @@ interface Content {
     userId: string;
 }
 
+export function Documents() {
+    const [contents, setContent] = useState<Content[]>([]);
 
-export function Documents(){
+    useEffect(() => {
+        async function loadContents() {
+            const data = await fetchContents();
+            setContent(data);
+        }
+        loadContents();
+    }, []);
 
-  const [contents, setContent] = useState<Content[]>([]);
-  useEffect(()=>{
-    async function loadContents(){
-      const data = await fetchContents();
-      setContent(data);
-    }
-    loadContents();
-  }, []);
-
-
-    return <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] md:grid-cols-2 lg:grid-cols-3 gap-4 justify-items-center">
-            {contents.filter((content)=>content.type === "document").map((content) => ( <Card key={content._id} contentId={content._id} editable type={content.type} link={content.link} tags={content.tags.map(tag => tag.title)} title={content.title}  />))}
-          </div>
+    return (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-6 min-h-full justify-items-center">
+            {contents.filter((content) => content.type === "document").map((content) => (
+                <Card
+                    key={content._id}
+                    contentId={content._id}
+                    editable
+                    type={content.type}
+                    link={content.link}
+                    tags={content.tags.map(tag => tag.title)}
+                    title={content.title}
+                />
+            ))}
+        </div>
+    );
 }

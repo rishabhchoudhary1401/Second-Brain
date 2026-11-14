@@ -8,13 +8,13 @@ export function AuthenticatedRoots(){
 
     }
     return (
-        <div className="flex h-screen">
+        <div className="flex h-screen bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100">
             <SideBar />
 
-            <div className="flex-1 flex flex-col bg-slate-100">
+            <div className="flex-1 flex flex-col bg-slate-100 dark:bg-gray-950">
                 <Header />
 
-                <main className="flex-1 overflow-scroll">
+                <main className="flex-1 overflow-y-auto">
                     <Outlet />
                 </main>
             </div>
